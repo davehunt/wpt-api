@@ -36,7 +36,7 @@ test $TARGET --location us-east-1-linux:Chrome Canary --bodies --keepua -r 3 --f
       }
       post {
         always {
-          archiveArtifacts 'wpt.json'
+          archiveArtifacts 'commands.txt wpt.json'
         }
         success {
           stash includes: 'wpt.json', name: 'wpt.json'
