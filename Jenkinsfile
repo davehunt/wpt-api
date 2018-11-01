@@ -7,7 +7,6 @@ pipeline {
     WEBPAGETEST_SERVER = "https://${WEB_PAGE_TEST}@wpt-api.stage.mozaws.net/"
   }
   options {
-    ansiColor('xterm')
     timestamps()
     timeout(time: 15, unit: 'MINUTES')
   }
