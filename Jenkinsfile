@@ -9,7 +9,7 @@ pipeline {
   options {
     ansiColor('xterm')
     timestamps()
-    timeout(time: 120, unit: 'MINUTES')
+    timeout(time: 15, unit: 'MINUTES')
   }
   stages {
     stage('clone') {
@@ -27,14 +27,20 @@ pipeline {
         dockerfile { dir 'webpagetest-api' }
       }
       steps {
-        sh '/usr/src/app/bin/webpagetest batch commands.txt > "alexa-topsites.json"'
+        writeFile {
+          file: 'commands.txt',
+          text: '''test $TARGET --location us-east-1-linux:Firefox --bodies --keepua -r 3 --first --poll --reporter json
+test $TARGET --location us-east-1-linux:Firefox Nightly --bodies --keepua -r 3 --first --poll --reporter json
+test $TARGET --location us-east-1-linux:Chrome --bodies --keepua -r 3 --first --poll --reporter json
+test $TARGET --location us-east-1-linux:Chrome Canary --bodies --keepua -r 3 --first --poll --reporter json'''
+        sh '/usr/src/app/bin/webpagetest batch commands.txt > "wpt.json"'
         }
       post {
         always {
-          archiveArtifacts 'alexa-topsites.json'
+          archiveArtifacts 'wpt.json'
         }
         success {
-          stash includes: 'alexa-topsites.json', name: 'alexa-topsites.json'
+          stash includes: 'wpt.json', name: 'wpt.json'
         }
       }
     }
@@ -45,10 +51,8 @@ pipeline {
         }
       }
       steps {
-        unstash 'alexa-topsites.json'
-        sh '''
-          python ./send_to_datadog.py
-        '''
+        unstash 'wpt.json'
+        // sh 'python ./send_to_datadog.py'
       }
     }
   }
