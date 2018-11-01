@@ -7,7 +7,8 @@ from datadog import statsd
 options = {'statsd_host': 'localhost',
            'statsd_port': '8125'}
 
-with open('alexa-topsites.json') as json_data:
+# TODO: take an argument for the filename
+with open('wpt.json') as json_data:
     loaded_json = json.load(json_data)
 
     '''
