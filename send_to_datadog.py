@@ -1,32 +1,46 @@
 import json
+import sys
 
-from datadog import initialize
-from datadog import statsd
-
-
-options = {'statsd_host': 'localhost',
-           'statsd_port': '8125'}
-
-# TODO: take an argument for the filename
-with open('wpt.json') as json_data:
-    loaded_json = json.load(json_data)
-
-    '''
-    Just leaving the example below, in, for my own reference
-    print("data.median.firstView.TTFB {}".format(loaded_json["data"]["median"]["firstView"]["TTFB"]))
-    '''
+from datadog import initialize, statsd
 
 
-initialize(**options)
+options = {
+    "statsd_host": "localhost",
+    "statsd_port": "8125",
+}
 
-test_names = ['google.fx.release', 'google.fx.nightly', 'google.chrome.release',
-              'google.chrome.canary', 'youtube.fx.release', 'youtube.fx.nightly',
-              'youtube.chrome.release', 'youtube.chrome.canary', 'facebook.fx.release',
-              'facebook.fx.nightly', 'facebook.chrome.release', 'facebook.chrome.canary']
-metrics = ['TTFB', 'render', 'firstPaint', 'timeToDOMContentFlushed', 'SpeedIndex', 'bytesInDoc',
-           'visualComplete', 'requestsFull']
+metrics = [
+    "TTFB",
+    "render",
+    "firstPaint",
+    "timeToDOMContentFlushed",
+    "SpeedIndex",
+    "bytesInDoc",
+    "visualComplete",
+    "requestsFull",
+]
 
-for test_name in test_names:
+
+def main(path, label):
+
+    with open(path) as f:
+        data = json.load(f)
+
+    test = [t for t in data if t["data"]["label"] == label]
+    assert len(test) > 0, f"Test with label {label} not found in data!"
+    assert len(test) == 1, f"Multiple tests with label {label} found in data!"
+
+    initialize(**options)
+
+    print(f"{label}")
     for metric in metrics:
-        statsd.gauge('wpt.batch.{}.median.firstView.{}'.format(test_name, metric),
-                     loaded_json[test_names.index(test_name)]['data']['median']['firstView'][metric])
+        value = test[0]["data"]["median"]["firstView"][metric]
+        print(f"- {metric}: {value}")
+        statsd.gauge(f"wpt.batch.{label}.median.firstView.{metric}", value)
+
+
+if __name__ == "__main__":
+    if not len(sys.argv) == 3:
+        print("Usage: python send_to_datadog.py path label")
+        exit()
+    main(*sys.argv[1:])

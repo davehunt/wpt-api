@@ -51,7 +51,10 @@ test ${TARGET_URL} --location us-east-1-linux:Chrome Canary --bodies --keepua -r
       }
       steps {
         unstash 'wpt.json'
-        sh 'python ./send_to_datadog.py'
+        sh 'python ./send_to_datadog.py wpt.json ${TARGET_NAME}.fx.release'
+        sh 'python ./send_to_datadog.py wpt.json ${TARGET_NAME}.fx.nightly'
+        sh 'python ./send_to_datadog.py wpt.json ${TARGET_NAME}.chrome.release'
+        sh 'python ./send_to_datadog.py wpt.json ${TARGET_NAME}.chrome.canary'
       }
     }
   }
