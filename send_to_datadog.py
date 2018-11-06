@@ -21,26 +21,24 @@ metrics = [
 ]
 
 
-def main(path, label):
+def main(path):
 
     with open(path) as f:
         data = json.load(f)
 
-    test = [t for t in data if t["data"]["label"] == label]
-    assert len(test) > 0, f"Test with label {label} not found in data!"
-    assert len(test) == 1, f"Multiple tests with label {label} found in data!"
-
     initialize(**options)
 
-    print(f"{label}")
-    for metric in metrics:
-        value = test[0]["data"]["median"]["firstView"][metric]
-        print(f"- {metric}: {value}")
-        statsd.gauge(f"wpt.batch.{label}.median.firstView.{metric}", value)
+    for test in data:
+        label = test["data"]["label"]
+        print(f"{label}")
+        for metric in metrics:
+            value = test["data"]["median"]["firstView"][metric]
+            print(f"- {metric}: {value}")
+            statsd.gauge(f"wpt.batch.{label}.median.firstView.{metric}", value)
 
 
 if __name__ == "__main__":
-    if not len(sys.argv) == 3:
-        print("Usage: python send_to_datadog.py path label")
+    if not len(sys.argv) == 2:
+        print("Usage: python send_to_datadog.py path")
         exit()
     main(*sys.argv[1:])
