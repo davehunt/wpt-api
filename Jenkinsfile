@@ -28,10 +28,10 @@ pipeline {
       steps {
         writeFile([
           file: 'commands.txt',
-          text: """test ${URL} --location us-east-1-linux:Firefox --bodies --keepua -r 3 --first --poll --reporter json --label ${NAME}.fx.release
-test ${URL} --location us-east-1-linux:Firefox Nightly --bodies --keepua -r 3 --first --poll --reporter json --label ${NAME}.fx.nightly
-test ${URL} --location us-east-1-linux:Chrome --bodies --keepua -r 3 --first --poll --reporter json --label ${NAME}.chrome.release
-test ${URL} --location us-east-1-linux:Chrome Canary --bodies --keepua -r 3 --first --poll --reporter json --label ${NAME}.chrome.canary"""])
+          text: """test ${TARGET_URL} --location us-east-1-linux:Firefox --bodies --keepua -r 3 --first --poll --reporter json --label ${TARGET_NAME}.fx.release
+test ${TARGET_URL} --location us-east-1-linux:Firefox Nightly --bodies --keepua -r 3 --first --poll --reporter json --label ${TARGET_NAME}.fx.nightly
+test ${TARGET_URL} --location us-east-1-linux:Chrome --bodies --keepua -r 3 --first --poll --reporter json --label ${TARGET_NAME}.chrome.release
+test ${TARGET_URL} --location us-east-1-linux:Chrome Canary --bodies --keepua -r 3 --first --poll --reporter json --label ${TARGET_NAME}.chrome.canary"""])
         sh '/usr/src/app/bin/webpagetest batch commands.txt > "wpt.json"'
       }
       post {
