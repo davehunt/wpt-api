@@ -13,6 +13,9 @@ pipeline {
           args '--net host'
         }
       }
+      environment {
+        DATADOG_API_KEY = credentials("DATADOG_API_KEY")
+      }
       steps {
         sh 'python ./create_dashboards.py'
       }

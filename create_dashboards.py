@@ -1,12 +1,12 @@
 import json
+import os
 import sys
 
 from datadog import api, initialize
 
 
 options = {
-    "statsd_host": "localhost",
-    "statsd_port": "8125",
+    "api_key": os.getenv("DATADOG_API_KEY"),
 }
 
 
