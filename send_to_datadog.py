@@ -9,24 +9,14 @@ options = {
     "statsd_port": "8125",
 }
 
-# these metrics are roughly in order of occurrence & metadata
-metrics = [
-    "TTFB",
-    "render",
-    "firstPaint",
-    "timeToDOMContentFlushed",
-    "SpeedIndex",
-    "bytesInDoc",
-    "visualComplete",
-    "requestsFull",
-    "browser_version"
-]
-
 
 def main(path):
 
     with open(path) as f:
         data = json.load(f)
+
+    with open("metrics.json") as f:
+        metrics = json.load(f)
 
     initialize(**options)
 

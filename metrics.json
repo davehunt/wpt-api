@@ -1,0 +1,10 @@
+[
+  "TTFB",
+  "render",
+  "firstPaint",
+  "timeToDOMContentFlushed",
+  "SpeedIndex",
+  "bytesInDoc",
+  "visualComplete",
+  "requestsFull",
+]
