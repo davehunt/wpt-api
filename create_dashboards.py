@@ -28,7 +28,7 @@ def main():
     dashboards = []
 
     for target in targets:
-        safe_name = target["name"].translate(str.maketrans(". ", "--"))
+        safe_name = target["name"].lower().translate(str.maketrans(". ", "--"))
         title = f"{target['name']} ({target['url']})"
         description = f"WebPageTest results for {target['name']} ({target['url']})"
         graphs = []
