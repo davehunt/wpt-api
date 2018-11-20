@@ -1,5 +1,6 @@
 import json
 import os
+import pprint
 import sys
 
 from datadog import api, initialize
@@ -15,6 +16,7 @@ def main():
     initialize(**options)
 
     dashboard_list = api.DashboardList.create(name="WebPageTest")
+    pprint.pprint(dashboard_list)
 
     with open("metrics.json") as f:
         metrics = json.load(f)
@@ -49,6 +51,7 @@ def main():
             description=description,
             graphs=graphs,
             read_only=True)
+        pprint.pprint(dashboard)
         dashboards.append(dashboard)
 
     api.DashboardList.update_items(dashboard_list["id"], dashboards=dashboards)
