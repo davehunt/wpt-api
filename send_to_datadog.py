@@ -31,12 +31,17 @@ def main(path):
     initialize(**options)
 
     for test in data:
+        sample = test["data"]["median"]["firstView"]
+        tags = [
+            "url:" + test["data"]["testUrl"],
+            "browser_name:" + sample["browser_name"],
+            "browser_version:" + sample["browser_version"]]
         label = test["data"]["label"]
         print(f"{label}")
         for metric in metrics:
-            value = test["data"]["median"]["firstView"][metric]
+            value = sample[metric]
             print(f"- {metric}: {value}")
-            statsd.gauge(f"wpt.batch.{label}.median.firstView.{metric}", value)
+            statsd.gauge(f"wpt.median.firstView.{metric}", value, tags=tags)
 
 
 if __name__ == "__main__":
