@@ -37,7 +37,7 @@ def main():
             requests = []
 
             for browser in ("chrome.release", "chrome.canary", "fx.release"):
-                requests.append(f"avg:wpt.batch.{safe_name}.{browser}.median.firstView.{metric}{{*}}")
+                requests.append({"q": f"avg:wpt.batch.{safe_name}.{browser}.median.firstView.{metric}{{*}}"})
 
             graphs.append({
                 "title": metric,
