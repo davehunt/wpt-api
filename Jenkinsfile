@@ -15,6 +15,7 @@ pipeline {
       }
       environment {
         DATADOG_API_KEY = credentials("DATADOG_API_KEY")
+        DATADOG_APP_KEY = credentials("DATADOG_APP_KEY")
       }
       steps {
         sh 'python ./create_dashboards.py'

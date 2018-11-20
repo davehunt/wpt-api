@@ -8,6 +8,7 @@ from datadog import api, initialize
 
 options = {
     "api_key": os.getenv("DATADOG_API_KEY"),
+    "app_key": os.getenv("DATADOG_APP_KEY"),
 }
 
 
