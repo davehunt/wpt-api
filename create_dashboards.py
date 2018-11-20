@@ -47,11 +47,11 @@ def main():
                 }
             })
 
+        pprint.pprint(graphs)
         dashboard = api.Timeboard.create(
             title=title,
             description=description,
-            graphs=graphs,
-            read_only=True)
+            graphs=graphs)
         pprint.pprint(dashboard)
         dashboards.append(dashboard)
 
