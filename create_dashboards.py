@@ -51,7 +51,7 @@ def main():
             read_only=True)
         dashboards.append(dashboard)
 
-    api.DashboardList.update_items(dashboard_list.id, dashboards=dashboards)
+    api.DashboardList.update_items(dashboard_list["id"], dashboards=dashboards)
 
 
 if __name__ == "__main__":
