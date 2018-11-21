@@ -18,7 +18,7 @@ def main(path):
 
     initialize(**options)
 
-    dbl_name = "WebPageTest"
+    dbl_name = "WebPageTest2"
     dbls = api.DashboardList.get_all()["dashboard_lists"]
     pprint.pprint(dbls)
     dbl = next(dbl for dbl in dbls if dbl["name"] == dbl_name)
