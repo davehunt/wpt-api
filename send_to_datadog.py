@@ -18,20 +18,18 @@ def main(path):
 
     initialize(**options)
 
-    dashboard_list_name = "WebPageTest"
-    dashboard_lists = api.DashboardList.get_all()
-    pprint.pprint(dashboard_lists)
+    dbl_name = "WebPageTest"
+    dbls = api.DashboardList.get_all()["dashboard_lists"]
+    pprint.pprint(dbls)
+    dbl = next(dbl for dbl in dbls if dbl["name"] == dbl_name)
+    print(f"Using existing {dbl_name} dashboard list")
 
-    if dashboard_list_name in dashboard_lists:
-        print(f"Using existing {dashboard_list_name} dashboard list")
-        dashboard_list = dashboard_lists[dashboard_list_name]
-    else:
-        print(f"Creating {dashboard_list_name} dashboard list")
-        # dashboard_list = api.DashboardList.create(name=name)
+    # print(f"Creating {dbl_name} dashboard list")
+    # dashboard_list = api.DashboardList.create(name=name)
 
-    timeboards = {}
-    # timeboards = api.Timeboard.get_all()
-    # pprint.pprint(timeboards)
+    tbdata = {}
+    tbs = api.Timeboard.get_all()
+    pprint.pprint(tbs)
 
     with open(path) as f:
         data = json.load(f)
@@ -41,10 +39,11 @@ def main(path):
 
     for test in data:
         target_url = test["data"]["testUrl"]
-        timeboard = timeboards.setdefault(target_url, {})  # use dataclass?
-        timeboard["title"] = target_url
-        timeboard["description"] = f"WebPageTest results for {target_url}"
-        graphs = timeboard.setdefault("graphs", [])
+
+        tbdata = tbdata.setdefault(target_url, {})
+        tbdata["title"] = target_url
+        tbdata["description"] = f"WebPageTest results for {target_url}"
+        graphs = tbdata.setdefault("graphs", [])
 
         sample = test["data"]["median"]["firstView"]
         browser_name = sample["browser_name"]
@@ -72,14 +71,14 @@ def main(path):
                 }
             })
 
-    pprint.pprint(timeboards)
+    pprint.pprint(tbdata)
 
-    for timeboard in timeboards.items():
-        title = timeboard["title"]
-        description = timeboard["description"]
-        graphs = timeboard["graphs"]
+    for data in tbdata.values():
+        title = data["title"]
+        description = data["description"]
+        graphs = data["graphs"]
 
-        if title in timeboards:
+        if title in tbs:
             print(f"Updating {title} timeboard")
             timeboard_id = timeboards[title]["id"]
             # result = api.Timeboard.update(
@@ -98,8 +97,8 @@ def main(path):
         #     )
         # pprint.pprint(result)
 
-        print(f"Adding {title} timeboard to {dashboard_list_name} dashboard list")
-        # result = api.DashboardList.add_items(dashboard_list["id"], dashboards=[result])
+        print(f"Adding {title} timeboard to {dbl_name} dashboard list")
+        # result = api.DashboardList.add_items(dbl["id"], dashboards=[result])
         # pprint.pprint(result)
 
 
