@@ -1,5 +1,5 @@
 import json
-import pprint
+from pprint import pprint
 import os
 import sys
 
@@ -18,19 +18,19 @@ def main(path):
 
     initialize(**options)
 
-    dbl_name = "WebPageTest2"
+    dbl_name = "WebPageTest"
     dbls = api.DashboardList.get_all()["dashboard_lists"]
-    pprint.pprint(dbls)
+    # pprint(dbls)
     try:
         dbl = next(dbl for dbl in dbls if dbl["name"] == dbl_name)
         print(f"Using existing {dbl_name} dashboard list")
     except StopIteration:
         print(f"Creating {dbl_name} dashboard list")
-        # dbl = api.DashboardList.create(name=name)
+        dbl = api.DashboardList.create(name=dbl_name)
 
     tbdata = {}
     tbs = api.Timeboard.get_all()["dashes"]
-    pprint.pprint(tbs)
+    pprint(tbs)
 
     with open(path) as f:
         data = json.load(f)
@@ -41,10 +41,10 @@ def main(path):
     for test in data:
         target_url = test["data"]["testUrl"]
 
-        tbdata = tbdata.setdefault(target_url, {})
-        tbdata["title"] = target_url
-        tbdata["description"] = f"WebPageTest results for {target_url}"
-        graphs = tbdata.setdefault("graphs", [])
+        tb = tbdata.setdefault(target_url, {})
+        tb["title"] = target_url
+        tb["description"] = f"WebPageTest results for {target_url}"
+        graphs = tb.setdefault("graphs", [])
 
         sample = test["data"]["median"]["firstView"]
         browser_name = sample["browser_name"]
@@ -72,35 +72,32 @@ def main(path):
                 }
             })
 
-    pprint.pprint(tbdata)
+    pprint(tb)
 
-    for data in tbdata.values():
-        title = data["title"]
-        description = data["description"]
-        graphs = data["graphs"]
+    for item in tbdata.values():
+        title = item["title"]
+        description = item["description"]
+        graphs = item["graphs"]
 
-        tb = next(tb for tb in tbs if tb["title"] == title)
-        print(f"Updating {title} timeboard")
-        timeboard_id = timeboards[title]["id"]
-        # tb = api.Timeboard.update(
-        #     tb["id"],
-        #     title=title,
-        #     description=description,
-        #     graphs=graphs,
-        # )
-        # else:
-        #     print(f"Creating {title} timeboard")
-        #     result = api.Timeboard.create(
-        #         timeboard_id,
-        #         title=title,
-        #         description=description,
-        #         graphs=graphs,
-        #     )
-        # pprint.pprint(result)
+        try:
+            tb = next(tb for tb in tbs if tb["title"] == title)
+            print(f"Updating {title} timeboard")
+            tb = api.Timeboard.update(
+                tb["id"],
+                title=title,
+                description=description,
+                graphs=graphs,
+            )
+        except StopIteration:
+            print(f"Creating {title} timeboard")
+            tb = api.Timeboard.create(
+                title=title,
+                description=description,
+                graphs=graphs,
+            )
 
         print(f"Adding {title} timeboard to {dbl_name} dashboard list")
-        # result = api.DashboardList.add_items(dbl["id"], dashboards=[result])
-        # pprint.pprint(result)
+        api.DashboardList.add_items(dbl["id"], dashboards=[tb])
 
 
 if __name__ == "__main__":
