@@ -98,7 +98,7 @@ def main(path):
         # pprint(tb)
         print(f"Adding {title} timeboard to {dbl_name} dashboard list")
         added = api.DashboardList.add_items(dbl["id"], dashboards=[{
-            "type": "integration_timeboard",
+            "type": "custom_timeboard",
             "id": tb["dash"]["id"]}])
         pprint(added)
 
