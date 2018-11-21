@@ -16,6 +16,8 @@ options = {
 
 def main(path):
 
+    initialize(**options)
+
     dashboard_list_name = "WebPageTest"
     dashboard_lists = api.DashboardList.get_all()
 
@@ -35,8 +37,6 @@ def main(path):
 
     with open("metrics.json") as f:
         metrics = json.load(f)
-
-    initialize(**options)
 
     for test in data:
         target_url = test["data"]["testUrl"]
