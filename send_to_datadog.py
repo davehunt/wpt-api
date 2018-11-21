@@ -53,23 +53,25 @@ def main(path):
         print(f"{target_url} - {browser_name} ({browser_version})")
         requests = []
         for metric in metrics:
-            query = f"avg:wpt.batch.{label}.median.firstView.{metric}{{*}}"
+            name = metric['name']
+            title = f"{metric['description']} ({metric['unit']})"
+            query = f"avg:wpt.batch.{label}.median.firstView.{name}{{*}}"
             try:
-                graph = next(g for g in graphs if g["title"] == metric)
+                graph = next(g for g in graphs if g["title"] == title)
                 requests = graph["definition"]["requests"]
                 if query not in requests:
                     requests.append({"q": query})
             except StopIteration:
                 graphs.append({
-                    "title": metric,
+                    "title": title,
                     "definition": {
                         "requests": [{"q": query}],
                         "viz": "timeseries",
                     }
                 })
-            value = test["data"]["median"]["firstView"][metric]
-            print(f"- {metric}: {value}")
-            # statsd.gauge(f"wpt.batch.{label}.median.firstView.{metric}", value)
+            value = test["data"]["median"]["firstView"][name]
+            print(f"- {name}: {value}")
+            # statsd.gauge(f"wpt.batch.{label}.median.firstView.{name}", value)
 
     # pprint(tb)
 
