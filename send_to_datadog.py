@@ -21,14 +21,15 @@ def main(path):
     dbl_name = "WebPageTest2"
     dbls = api.DashboardList.get_all()["dashboard_lists"]
     pprint.pprint(dbls)
-    dbl = next(dbl for dbl in dbls if dbl["name"] == dbl_name)
-    print(f"Using existing {dbl_name} dashboard list")
-
-    # print(f"Creating {dbl_name} dashboard list")
-    # dashboard_list = api.DashboardList.create(name=name)
+    try:
+        dbl = next(dbl for dbl in dbls if dbl["name"] == dbl_name)
+        print(f"Using existing {dbl_name} dashboard list")
+    except StopIteration:
+        print(f"Creating {dbl_name} dashboard list")
+        # dbl = api.DashboardList.create(name=name)
 
     tbdata = {}
-    tbs = api.Timeboard.get_all()
+    tbs = api.Timeboard.get_all()["dashes"]
     pprint.pprint(tbs)
 
     with open(path) as f:
@@ -78,17 +79,17 @@ def main(path):
         description = data["description"]
         graphs = data["graphs"]
 
-        if title in tbs:
-            print(f"Updating {title} timeboard")
-            timeboard_id = timeboards[title]["id"]
-            # result = api.Timeboard.update(
-            #     timeboard_id,
-            #     title=title,
-            #     description=description,
-            #     graphs=graphs,
-            # )
-        else:
-            print(f"Creating {title} timeboard")
+        tb = next(tb for tb in tbs if tb["title"] == title)
+        print(f"Updating {title} timeboard")
+        timeboard_id = timeboards[title]["id"]
+        # tb = api.Timeboard.update(
+        #     tb["id"],
+        #     title=title,
+        #     description=description,
+        #     graphs=graphs,
+        # )
+        # else:
+        #     print(f"Creating {title} timeboard")
         #     result = api.Timeboard.create(
         #         timeboard_id,
         #         title=title,
