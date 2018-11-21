@@ -18,7 +18,7 @@ pipeline {
         DATADOG_APP_KEY = credentials("DATADOG_APP_KEY")
       }
       steps {
-        sh 'python ./send_to_datadog.py'
+        sh 'python ./send_to_datadog.py wpt.json'
       }
     }
   }
