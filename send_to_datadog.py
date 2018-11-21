@@ -95,6 +95,7 @@ def main(path):
                 graphs=graphs,
             )
 
+        pprint(tb)
         print(f"Adding {title} timeboard to {dbl_name} dashboard list")
         api.DashboardList.add_items(dbl["id"], dashboards=[{
             "type": "integration_timeboard",
