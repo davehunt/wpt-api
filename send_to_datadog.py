@@ -95,11 +95,12 @@ def main(path):
                 graphs=graphs,
             )
 
-        pprint(tb)
+        # pprint(tb)
         print(f"Adding {title} timeboard to {dbl_name} dashboard list")
-        api.DashboardList.add_items(dbl["id"], dashboards=[{
+        added = api.DashboardList.add_items(dbl["id"], dashboards=[{
             "type": "integration_timeboard",
             "id": tb["dash"]["id"]}])
+        pprint(added)
 
 
 if __name__ == "__main__":
