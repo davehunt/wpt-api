@@ -20,6 +20,7 @@ def main(path):
 
     dashboard_list_name = "WebPageTest"
     dashboard_lists = api.DashboardList.get_all()
+    pprint.pprint(dashboard_lists)
 
     if dashboard_list_name in dashboard_lists:
         print(f"Using existing {dashboard_list_name} dashboard list")
@@ -51,7 +52,11 @@ def main(path):
         label = test["data"]["label"]
         print(f"{target_url} - {browser_name} ({browser_version})")
         for metric in metrics:
-            requests = graphs["deinition"]["requests"] or []
+            requests = []
+            for graph in graphs:
+                if graph["title"] == metric:
+                    requests = graph["definition"]["requests"]
+
             query = f"avg:wpt.batch.{label}.median.firstView.{metric}{{*}}"
             if query not in requests:
                 requests.append({"q": query})
