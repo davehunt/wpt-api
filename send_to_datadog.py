@@ -49,7 +49,7 @@ def main(path):
         sample = test["data"]["median"]["firstView"]
         browser_name = sample["browser_name"]
         browser_version = sample["browser_version"]
-        label = test["data"]["label"]
+        label = test["data"]["label"].replace('-', '_')
         print(f"{target_url} - {browser_name} ({browser_version})")
         requests = []
         for metric in metrics:
@@ -71,7 +71,7 @@ def main(path):
                 })
             value = test["data"]["median"]["firstView"][name]
             print(f"- {name}: {value}")
-            # statsd.gauge(f"wpt.batch.{label}.median.firstView.{name}", value)
+            statsd.gauge(f"wpt.batch.{label}.median.firstView.{name}", value)
 
     # pprint(tb)
 
