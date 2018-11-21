@@ -36,7 +36,7 @@ def main():
         for metric in metrics:
             requests = []
 
-            for browser in ("chrome.release", "chrome.canary", "fx.release"):
+            for browser in ("chrome.release", "chrome.canary", "fx.release", "fx.nightly"):
                 requests.append({"q": f"avg:wpt.batch.{safe_name}.{browser}.median.firstView.{metric}{{*}}"})
 
             graphs.append({
@@ -51,7 +51,8 @@ def main():
         dashboard = api.Timeboard.create(
             title=title,
             description=description,
-            graphs=graphs)
+            graphs=graphs,
+            readonly=True)
         pprint.pprint(dashboard)
         dashboards.append(dashboard)
 
