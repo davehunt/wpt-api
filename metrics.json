@@ -6,5 +6,5 @@
   {"name": "SpeedIndex", "description": "SpeedIndex", "unit": "seconds"},
   {"name": "bytesInDoc", "description": "Total Bytes in Doc", "unit": "bytes"},
   {"name": "visualComplete", "description": "Time to Visual Complete", "unit": "seconds"},
-  {"name": "requestsFull", "description": "Number of HTTP(s) Requests", "unit": "count"},
+  {"name": "requestsFull", "description": "Number of HTTP(s) Requests", "unit": "count"}
 ]
