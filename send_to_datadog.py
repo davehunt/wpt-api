@@ -30,7 +30,7 @@ def main(path):
 
     tbdata = {}
     tbs = api.Timeboard.get_all()["dashes"]
-    pprint(tbs)
+    # pprint(tbs)
 
     with open(path) as f:
         data = json.load(f)
@@ -71,7 +71,7 @@ def main(path):
             print(f"- {metric}: {value}")
             # statsd.gauge(f"wpt.batch.{label}.median.firstView.{metric}", value)
 
-    pprint(tb)
+    # pprint(tb)
 
     for item in tbdata.values():
         title = item["title"]
@@ -98,7 +98,7 @@ def main(path):
         print(f"Adding {title} timeboard to {dbl_name} dashboard list")
         api.DashboardList.add_items(dbl["id"], dashboards=[{
             "type": "integration_timeboard",
-            "id": tb["dash"]["id"]}])
+            "id": tb["id"]}])
 
 
 if __name__ == "__main__":
