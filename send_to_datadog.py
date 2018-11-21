@@ -60,13 +60,13 @@ def main(path):
                 if query not in requests:
                     requests.append({"q": query})
             except StopIteration:
-                graph = {
+                graphs.append({
                     "title": metric,
                     "definition": {
                         "requests": [{"q": query}],
                         "viz": "timeseries",
                     }
-                }
+                })
             value = test["data"]["median"]["firstView"][metric]
             print(f"- {metric}: {value}")
             # statsd.gauge(f"wpt.batch.{label}.median.firstView.{metric}", value)
